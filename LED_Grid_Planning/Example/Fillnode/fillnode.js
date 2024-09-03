@@ -51,27 +51,31 @@ function setRectangle(ctx, y, x, color){
 
 }
 
-function drawCircle(ctx, centerX, centerY, radius, color) {
+function drawCircle(ctx, centerY, centerX, radius, color) {
     // Iterate through each square on the canvas
-    var xstart = 1;
-    var xend = 1;
-    if (centerX>=radius){ 
-        xstart = centerX - radius;
-    } else { 
-        xstart = 1;
-    }
-    if ((ledw - radius) >= centerX){
-        xend = (centerX + radius);
-    } else {
-        xend = ledw;
-    }
-    setRectangle(ctx, centerY, centerX, "blue");
-    for (var x = xstart; x <= xend; x++) {
-        ypos1 = Math.round(centerY + Math.sqrt(Math.pow(radius,2) - pow(x-h, 2)));
-        ypos2 = Math.round(centerY - Math.sqrt(Math.pow(radius,2) - pow(x-h, 2)));
+    var xstart = Math.max(1, centerX - radius);
+    var xend = Math.min(ledw, centerX + radius);
+    
+    var ystart = Math.max(1, centerY - radius);
+    var yend = Math.min(ledh, centerY + radius);
 
-        setRectangle(ctx, x, ypos1, "green");
+    for (var x = xstart; x <= xend; x++) {
+        var yOffset = Math.sqrt(Math.pow(radius, 2) - Math.pow(x - centerX, 2));
+        var ypos1 = Math.round(centerY + yOffset);
+        var ypos2 = Math.round(centerY - yOffset);
+
+        setRectangle(ctx, x, ypos1, color);  // Top part of the circle
+        setRectangle(ctx, x, ypos2, color);  // Bottom part of the circle
     }
+    for (var y = ystart; y <= yend; y++) {
+        var xOffset = Math.sqrt(Math.pow(radius, 2) - Math.pow(y - centerY, 2));
+        var xpos1 = Math.round(centerX + xOffset);
+        var xpos2 = Math.round(centerX - xOffset);
+
+        setRectangle(ctx, xpos1, y, color);  // Top part of the circle
+        setRectangle(ctx, xpos2, y, color);  // Bottom part of the circle
+    }
+    // Print coordinates to the console
 }
 
 function setBorder(ctx){
@@ -99,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function() {
     setRectangle(ctx, 1, 2, "orange");
     setRectangle(ctx, 2, 2, "yellow");
 
-    drawCircle(ctx, 10, 20, 5, "red");
+    drawCircle(ctx, 16, 16, 10, "red");
 
     /*
     // Debugging: Draw something simple
