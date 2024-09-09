@@ -51,6 +51,26 @@ function setRectangle(ctx, y, x, color){
 
 }
 
+function drawDiagonalRtL2(ctx, yChange, xChange, color){
+    for (x=0; x<=ledw ; x++){
+        setRectangle(ctx, x+xChange, x+yChange, color);
+        setRectangle(ctx, x+xChange, x+1+yChange, color);
+    }
+}
+function drawDiagonalRtL(ctx, yChange, xChange, color){
+    /* for rtl, if square, if:
+    start at x = 2 edge, y stop at y = ymax-x
+    start at x = 0 edge, stop at y = ymax - x
+    start at y = 0 edge, stop at x = xmax - y
+    start at y = 2 edge, stop at x = xmax - y
+    */
+    
+    for (x=0; x<=ledw ; x++){
+        setRectangle(ctx, x+xChange, x+yChange, color);
+        setRectangle(ctx, x+xChange, x+1+yChange, color);
+    }
+}
+
 function drawCircle(ctx, centerY, centerX, radius, color) {
     // Iterate through each square on the canvas
     var xstart = Math.max(1, centerX - radius);
@@ -79,13 +99,13 @@ function drawCircle(ctx, centerY, centerX, radius, color) {
 }
 
 function setBorder(ctx){
-    for (x=1; x<=ledw; x++){
-        setRectangle(ctx, x, 1, "black");
+    for (x=0; x<=ledw; x++){
+        setRectangle(ctx, x, 0, "black");
         setRectangle(ctx, x, ledh, "black");
     }
     
-    for (y=2; y<=ledw-1; y++){
-        setRectangle(ctx, 1, y, "black");
+    for (y=0; y<=ledw-1; y++){
+        setRectangle(ctx, 0, y, "black");
         setRectangle(ctx, ledw, y, "black");
     }
 }
@@ -99,11 +119,19 @@ document.addEventListener("DOMContentLoaded", function() {
     canvas.height = 675; // Set canvas height in pixels
     setBorder(ctx);
 
-    setRectangle(ctx, 1, 1, "red");
-    setRectangle(ctx, 1, 2, "orange");
-    setRectangle(ctx, 2, 2, "yellow");
+    drawDiagonalRtL2(ctx, 0, 0, "blue");
+    drawDiagonalRtL2(ctx, 2, 0, "green");
+    drawDiagonalRtL2(ctx, 0, 2, "purple");
 
-    drawCircle(ctx, 16, 16, 10, "red");
+    setRectangle(ctx, 1, 30, "red");
+    setRectangle(ctx, 1, 31, "orange");
+    setRectangle(ctx, 2, 31, "yellow");
+    setRectangle(ctx, 2, 29, "red");
+    setRectangle(ctx, 2, 30, "orange");
+    setRectangle(ctx, 3, 30, "yellow");
+
+
+    drawCircle(ctx, 13, 19, 10, "red");
 
     /*
     // Debugging: Draw something simple
